@@ -22,7 +22,7 @@ def load_data():
 
 app_data = load_data()
 
-st.title("🇿🇲 Zambia Human Development Report 2016")
+st.title("📊 Zambia Human Development Report 2016")
 st.markdown("Exploratory data analysis dashboard visualizing key development trends, national strengths, and systemic challenges.")
 
 if not app_data:
