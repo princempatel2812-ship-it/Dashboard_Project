@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import json
 
-# Set layout configurations
+# Set layout configurations and browser tab settings
 st.set_page_config(
     page_title="Zambia Development Analysis", 
     page_icon="🇿🇲", 
@@ -22,8 +22,9 @@ def load_data():
 
 app_data = load_data()
 
-st.title("🌍 UN Development Intelligence Dashboard")
-st.markdown("Automated insights and visual analytics derived from local LLM extraction pipelines.")
+# --- CHANGED TITLE AND SUBHEADER HERE ---
+st.title("📊 Zambia Development Analytics Portal")
+st.markdown("An interactive platform for evaluating key human development indicators and cross-LLM extraction accuracy.")
 
 if not app_data:
     st.error("Data source missing. Please ensure 'extracted_data.json' exists in your root folder.")
@@ -65,13 +66,11 @@ else:
         comp_data = data.get('model_comparison', {})
         if comp_data:
             comp_df = pd.DataFrame(comp_data)
-            # Melt dataframe to make it compatible with Seaborn group bars
             melted_df = comp_df.melt(id_vars="Indicators", var_name="Model/Source", value_name="Value")
             
             fig2, ax2 = plt.subplots(figsize=(6, 4))
-            # Filtering out Life Expectancy for scale visibility if needed, or plotting all normalized
             sns.barplot(data=melted_df, x="Indicators", y="Value", hue="Model/Source", ax=ax2, palette="Set2")
-            ax2.set_yscale("log") # Using log scale since population/GNI vary drastically from index fractions
+            ax2.set_yscale("log")
             ax2.set_ylabel("Values (Log Scale)")
             ax2.set_xlabel("")
             plt.xticks(rotation=15)
