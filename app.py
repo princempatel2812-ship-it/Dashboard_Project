@@ -22,9 +22,8 @@ def load_data():
 
 app_data = load_data()
 
-# --- CHANGED TITLE AND SUBHEADER HERE ---
-st.title("📊 Zambia Development Analytics Portal")
-st.markdown("An interactive platform for evaluating key human development indicators and cross-LLM extraction accuracy.")
+st.title("🇿🇲 Zambia Human Development Report 2016")
+st.markdown("Exploratory data analysis dashboard visualizing key development trends, national strengths, and systemic challenges.")
 
 if not app_data:
     st.error("Data source missing. Please ensure 'extracted_data.json' exists in your root folder.")
@@ -32,7 +31,7 @@ else:
     data = app_data["data"]
     evaluation = app_data["evaluation"]
     
-    st.header(f"Country Profile: {data.get('country', 'Unknown')}")
+    # --- "Country Profile: Zambia" HEADING HAS BEEN REMOVED FROM HERE ---
     
     # Core Indicators Section (Top KPI Metrics)
     st.subheader("Core Development Indicators")
