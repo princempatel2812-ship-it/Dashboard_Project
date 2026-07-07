@@ -1,0 +1,38 @@
+{
+    "data": {
+        "country": "Zambia",
+        "HDI_value": 0.586,
+        "HDI_rank": 139,
+        "life_expectancy_years": 60.1,
+        "expected_years_of_schooling": 13.5,
+        "mean_years_of_schooling": 6.6,
+        "GNI_per_capita": 3734,
+        "population": 15203315,
+        "themes": {
+            "economy": 35,
+            "education": 20,
+            "health": 15,
+            "inequality": 15,
+            "employment": 10,
+            "gender": 5
+        },
+        "key_strengths": [
+            "High average economic growth rate driven by copper mining",
+            "Expected years of schooling increased by 80% between 2000 and 2014",
+            "High primary school net enrollment (94.3% in 2014)"
+        ],
+        "key_challenges": [
+            "Over-reliance on copper mining exports",
+            "High levels of rural poverty and rising income inequality",
+            "Low transition rates from primary to tertiary education"
+        ],
+        "hdi_trend": {
+            "1980": 0.42,
+            "1990": 0.40,
+            "2000": 0.43,
+            "2010": 0.56,
+            "2014": 0.59
+        }
+    },
+    "evaluation": "The extraction model successfully identified all core numerical indicators, aligning perfectly with the source text for the 2014 data points. However, it struggled slightly with verbosity in the qualitative sections, pulling full paragraphs for 'strengths' rather than concise bullet points. Thematic distribution extraction is complete but heavily skewed towards the economy, reflecting the report's focus on industrialization."
+}
