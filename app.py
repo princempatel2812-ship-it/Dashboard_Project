@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import json
 
-# Set page configuration and styling
+# Set layout configurations
 st.set_page_config(page_title="UN HDR Intelligence Dashboard", layout="wide")
 sns.set_theme(style="whitegrid", palette="muted")
 
@@ -22,78 +22,110 @@ st.title("🌍 UN Development Intelligence Dashboard")
 st.markdown("Automated insights and visual analytics derived from local LLM extraction pipelines.")
 
 if not app_data:
-    st.error("Data source missing. Please ensure 'extracted_data.json' exists or run the pipeline.")
+    st.error("Data source missing. Please ensure 'extracted_data.json' exists in your root folder.")
 else:
     data = app_data["data"]
     evaluation = app_data["evaluation"]
     
     st.header(f"Country Profile: {data.get('country', 'Unknown')}")
     
-    # --- TASK 3: Interactive Dashboard ---
-    
-    # 1. Core Indicators (Top Metrics)
+    # Core Indicators Section (Top KPI Metrics)
     st.subheader("Core Development Indicators")
     col1, col2, col3, col4, col5 = st.columns(5)
     col1.metric("HDI Value", data.get('HDI_value', 'N/A'))
     col2.metric("HDI Rank", data.get('HDI_rank', 'N/A'))
-    col3.metric("Life Expectancy", f"{data.get('life_expectancy_years', 'N/A')}y")
-    col4.metric("Schooling (Expected)", f"{data.get('expected_years_of_schooling', 'N/A')}y")
+    col3.metric("Life Expectancy", f"{data.get('life_expectancy_years', 'N/A')} yrs")
+    col4.metric("Schooling (Expected)", f"{data.get('expected_years_of_schooling', 'N/A')} yrs")
     col5.metric("GNI per Capita", f"${data.get('GNI_per_capita', 'N/A')}")
     
     st.markdown("---")
     
-    # --- Data Visualizations ---
-    chart_col1, chart_col2 = st.columns(2)
+    # --- ROW 1: THEMATIC DISTRIBUTION & MODEL COMPARISON ---
+    row1_col1, row1_col2 = st.columns(2)
     
-    with chart_col1:
-        # Plot 1: Thematic Distribution (Seaborn Barplot)
-        st.subheader("Thematic Extraction Distribution")
+    with row1_col1:
+        # PLOT 1: Thematic Focus Distribution
+        st.subheader("1. Thematic Extraction Distribution")
         themes = data.get('themes', {})
         if themes:
-            theme_df = pd.DataFrame(list(themes.items()), columns=['Theme', 'Frequency'])
-            theme_df = theme_df.sort_values(by='Frequency', ascending=False)
+            theme_df = pd.DataFrame(list(themes.items()), columns=['Theme', 'Mentions']).sort_values(by='Mentions', ascending=False)
+            fig1, ax1 = plt.subplots(figsize=(6, 4))
+            sns.barplot(data=theme_df, x='Mentions', y='Theme', ax=ax1, palette="viridis")
+            ax1.set_xlabel("Frequency Focus Score")
+            ax1.set_ylabel("")
+            st.pyplot(fig1)
             
-            fig_themes, ax_themes = plt.subplots(figsize=(6, 4))
-            sns.barplot(data=theme_df, x='Frequency', y='Theme', ax=ax_themes, palette="viridis")
-            ax_themes.set_title("Frequency of Themes in Report Narrative", pad=15)
-            ax_themes.set_xlabel("Mentions / Focus Score")
-            ax_themes.set_ylabel("")
-            st.pyplot(fig_themes)
+    with row1_col2:
+        # PLOT 2: Cross-LLM Accuracy Comparison
+        st.subheader("2. Model Comparison of Numerical Indicators")
+        comp_data = data.get('model_comparison', {})
+        if comp_data:
+            comp_df = pd.DataFrame(comp_data)
+            # Melt dataframe to make it compatible with Seaborn group bars
+            melted_df = comp_df.melt(id_vars="Indicators", var_name="Model/Source", value_name="Value")
+            
+            fig2, ax2 = plt.subplots(figsize=(6, 4))
+            # Filtering out Life Expectancy for scale visibility if needed, or plotting all normalized
+            sns.barplot(data=melted_df, x="Indicators", y="Value", hue="Model/Source", ax=ax2, palette="Set2")
+            ax2.set_yscale("log") # Using log scale since population/GNI vary drastically from index fractions
+            ax2.set_ylabel("Values (Log Scale)")
+            ax2.set_xlabel("")
+            plt.xticks(rotation=15)
+            st.pyplot(fig2)
 
-    with chart_col2:
-        # Plot 2: Demographic / HDI Trend (Seaborn Lineplot)
-        st.subheader("Historical HDI Trend")
-        trend_data = data.get('hdi_trend', {})
-        if trend_data:
-            trend_df = pd.DataFrame(list(trend_data.items()), columns=['Year', 'HDI'])
-            trend_df['Year'] = pd.to_numeric(trend_df['Year']) # Ensure proper numerical sorting
-            trend_df = trend_df.sort_values('Year')
+    st.markdown("---")
+    
+    # --- ROW 2: HISTORICAL TRENDS & DEMOGRAPHIC CHANGES ---
+    row2_col1, row2_col2 = st.columns(2)
+    
+    with row2_col1:
+        # PLOT 3: Historical HDI Time-Series
+        st.subheader("3. Historical HDI Trend")
+        hdi_trend = data.get('hdi_trend', {})
+        if hdi_trend:
+            hdi_df = pd.DataFrame(list(hdi_trend.items()), columns=['Year', 'HDI'])
+            hdi_df['Year'] = pd.to_numeric(hdi_df['Year'])
+            hdi_df = hdi_df.sort_values('Year')
             
-            fig_trend, ax_trend = plt.subplots(figsize=(6, 4))
-            sns.lineplot(data=trend_df, x='Year', y='HDI', marker='o', linewidth=2, color='coral', ax=ax_trend)
-            ax_trend.set_title("Human Development Index Over Time", pad=15)
-            ax_trend.set_ylim(0, 1) # HDI is always between 0 and 1
-            st.pyplot(fig_trend)
+            fig3, ax3 = plt.subplots(figsize=(6, 4))
+            sns.lineplot(data=hdi_df, x='Year', y='HDI', marker='o', linewidth=2.5, color='royalblue', ax=ax3)
+            ax3.set_ylim(0, 1)
+            ax3.set_ylabel("Human Development Index Score")
+            st.pyplot(fig3)
+            
+    with row2_col2:
+        # PLOT 4: Demographic / Population Dynamic over Time
+        st.subheader("4. Demographic Trend (Population Growth)")
+        pop_trend = data.get('population_trend', {})
+        if pop_trend:
+            pop_df = pd.DataFrame(list(pop_trend.items()), columns=['Year', 'Population (Millions)'])
+            pop_df['Year'] = pd.to_numeric(pop_df['Year'])
+            pop_df = pop_df.sort_values('Year')
+            
+            fig4, ax4 = plt.subplots(figsize=(6, 4))
+            sns.lineplot(data=pop_df, x='Year', y='Population (Millions)', marker='s', linewidth=2.5, color='forestgreen', ax=ax4)
+            ax4.fill_between(pop_df['Year'], pop_df['Population (Millions)'], color='forestgreen', alpha=0.1)
+            ax4.set_ylabel("Total Population (Millions)")
+            st.pyplot(fig4)
 
     st.markdown("---")
 
-    # --- Qualitative Extraction ---
-    st.subheader("Qualitative Extraction Insights")
+    # Qualitative Framework Outputs
+    st.subheader("Qualitative Narrative Insights")
     qual_col1, qual_col2 = st.columns(2)
     
     with qual_col1:
-        st.info("**Key Strengths Identified:**")
+        st.info("**Key Strategic Strengths:**")
         for strength in data.get('key_strengths', []):
             st.markdown(f"- {strength}")
             
     with qual_col2:
-        st.warning("**Key Challenges Identified:**")
+        st.warning("**Key Strategic Challenges:**")
         for challenge in data.get('key_challenges', []):
             st.markdown(f"- {challenge}")
 
     st.markdown("---")
     
-    # --- Extension Task: Model Comparison ---
-    st.subheader("Cross-LLM Evaluation (LLM-as-a-Judge)")
-    with st.expander("View Evaluator Output", expanded=True):
-        st.write(evaluation)
+    # Cross-LLM Behavior Analysis Documentation
+    st.subheader("Evaluation & Cross-LLM Behavior Analysis")
+    st.write(evaluation)
