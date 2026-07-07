@@ -32,6 +32,19 @@
             "2000": 0.43,
             "2010": 0.56,
             "2014": 0.59
+        },
+        "population_trend": {
+            "2000": 10.5,
+            "2005": 11.8,
+            "2010": 13.6,
+            "2014": 15.2,
+            "2016": 15.9
+        },
+        "model_comparison": {
+            "Indicators": ["HDI Value", "Life Expectancy", "Expected Schooling", "Mean Schooling"],
+            "Ground_Truth": [0.586, 60.1, 13.5, 6.6],
+            "Llama3_Output": [0.580, 60.0, 13.2, 6.5],
+            "Mistral_Output": [0.575, 59.8, 14.0, 6.2]
         }
     },
     "evaluation": "The extraction model successfully identified all core numerical indicators, aligning perfectly with the source text for the 2014 data points. However, it struggled slightly with verbosity in the qualitative sections, pulling full paragraphs for 'strengths' rather than concise bullet points. Thematic distribution extraction is complete but heavily skewed towards the economy, reflecting the report's focus on industrialization."
