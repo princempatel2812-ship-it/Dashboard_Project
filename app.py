@@ -5,7 +5,11 @@ import seaborn as sns
 import json
 
 # Set layout configurations
-st.set_page_config(page_title="UN HDR Intelligence Dashboard", layout="wide")
+st.set_page_config(
+    page_title="Zambia Development Analysis", 
+    page_icon="🇿🇲", 
+    layout="wide"
+)
 sns.set_theme(style="whitegrid", palette="muted")
 
 @st.cache_data
