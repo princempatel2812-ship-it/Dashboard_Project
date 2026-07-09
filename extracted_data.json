@@ -2,12 +2,9 @@
     "data": {
         "country": "Zambia",
         "HDI_value": 0.586,
-        "HDI_rank": 139,
         "life_expectancy_years": 60.1,
         "expected_years_of_schooling": 13.5,
         "mean_years_of_schooling": 6.6,
-        "GNI_per_capita": 3734,
-        "population": 15203315,
         "themes": {
             "economy": 35,
             "education": 20,
@@ -45,7 +42,9 @@
             "Ground_Truth": [0.586, 60.1, 13.5, 6.6],
             "Llama3_Output": [0.580, 60.0, 13.2, 6.5],
             "Mistral_Output": [0.575, 59.8, 14.0, 6.2]
-        }
+        },
+        "GNI_per_capita": 3734,
+        "HDI_rank": 139
     },
-    "evaluation": "The extraction model successfully identified all core numerical indicators, aligning perfectly with the source text for the 2014 data points. However, it struggled slightly with verbosity in the qualitative sections, pulling full paragraphs for 'strengths' rather than concise bullet points. Thematic distribution extraction is complete but heavily skewed towards the economy, reflecting the report's focus on industrialization."
+    "evaluation": "The extraction model successfully identified all core numerical indicators, aligning perfectly with the source text for the 2014 data points. However, it struggled slightly with verbosity in the qualitative sections. Thematic distribution extraction is complete but heavily skewed towards the economy, reflecting the report's focus on industrialization."
 }
